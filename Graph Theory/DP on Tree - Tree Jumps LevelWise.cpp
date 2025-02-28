@@ -3,23 +3,15 @@ using namespace std;
 typedef long long int ll;
 const int mod = 998244353;
 
-vector<vector<int>> G, level;
-vector<ll> dis, dp;
-ll max_dis;
+vector<vector<int>> G;
+vector<ll> dis;
 
-void bfs(int n) {
-    queue<int> q;
-    q.push(n);
-    dis[n] = 0;
-    while(!q.empty()){
-        int cur_v = q.front();
-        q.pop();
-        for(auto child : G[cur_v]){
-            if(dis[child] == -1) { 
-                q.push(child);
-                dis[child] = dis[cur_v] + 1;
-                max_dis = max(max_dis, dis[child]);
-            }
+// For tree dfs can work like bfs to calc level
+void dfs(int u, int par = -1) {
+    for(auto v : G[u]){
+        if(v != par){
+            dis[v] = dis[u] + 1;
+            dfs(v, u);
         }
     }
 }
@@ -27,10 +19,10 @@ void bfs(int n) {
 void solve() {
     int n;
     cin >> n;
-    
     G.assign(n + 1, vector<int>());
-    dis.assign(n + 1, -1);
-    dp.assign(n + 1, 0);
+    dis.assign(n + 1, 0);
+    vector <ll> dp(n+1);
+    vector <vector<ll>> level(n+1);
 
     for(int u = 2; u <= n; u++){
         int v;
@@ -38,11 +30,9 @@ void solve() {
         G[u].push_back(v);
         G[v].push_back(u);
     }
-    max_dis = 0;
-    bfs(1);
-    // cout << max_dis << "\n";
-    level.assign(max_dis + 1, vector<int>());
 
+    ll max_dis = 0;
+    dfs(1);
     for(int i = 1; i <= n; i++){
         level[dis[i]].push_back(i);
         max_dis = max(max_dis, dis[i]);
@@ -66,7 +56,6 @@ void solve() {
                 dp[x] = (dp[x] + 1) % mod;
             }
             temp = (temp + dp[x]) % mod;
-            // cout << x << " " << dp[x] << " ";
         }
         prev = temp;
     }
