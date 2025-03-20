@@ -22,15 +22,6 @@ void solve() {
         }
     }
 
-    // cout << "\n\n";
-
-    // for(int i = 1; i <= n; i++){
-    //     for(int j = 7; j >= 0; j--){
-    //         cout << pre[i][j];
-    //     }
-    //     cout << "\n";
-    // }
-
     while(q--){
         int l, k;
         cin >> l >> k;
@@ -40,9 +31,10 @@ void solve() {
             while(low <= high){
                 ll mid = low + (high - low) / 2;
                 bool ok = false; // TTTTTFFFFF
-                ll p = 0;
+                ll p = 0; // stores bitwise and of the segment
                 for(int j = 0; j < 32; j++){
-                    if(CheckBit(v[l-1], j) && pre[mid][j] - pre[l][j] == (mid - l)) p += (1 << j);
+                    if(CheckBit(v[l-1], j) && pre[mid][j] - pre[l][j] == (mid - l)) p += (1 << j); // that bit is set
+                    // Checks till which index we have consecutive 1's
                 }
                 // cout << "[" << p << "," << mid << "] ";
                 if(p >= k) ok = true;
